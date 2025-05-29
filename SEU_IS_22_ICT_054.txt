@@ -1,0 +1,65 @@
+
+
+void delay(int milliseconds) {
+#ifdef _WIN32
+    Sleep(milliseconds);
+#else
+    usleep(milliseconds * 1000);
+#endif
+}
+
+void saveMenuToFile() {
+    FILE *file = fopen(MENU_FILENAME, "w");
+    if (file == NULL) {
+        printf("Error: Could not open %s for writing.\n", MENU_FILENAME);
+        delay(500);
+        return;
+    }
+    for (int i = 0; i < menuCount; i++) {
+        fprintf(file, "%d,%s,%.2f,%s\n", menu[i].id, menu[i].name, menu[i].price, menu[i].category);
+    }
+    fclose(file);
+    printf("Menu saved to %s successfully.\n", MENU_FILENAME);
+    delay(1000);
+}
+
+void loadMenuFromFile() {
+    FILE *file = fopen(MENU_FILENAME, "r");
+    if (file == NULL) {
+        printf("No existing menu file found. Starting with default menu.\n");
+        delay(1500);
+        menu[0] = (MenuItem){101, "Coffee", 100, "Drinks"};
+        menu[1] = (MenuItem){102, "Orange Juice", 200, "Drinks"};
+        menu[2] = (MenuItem){201, "Burger", 250, "Main Dish"};
+        menu[3] = (MenuItem){202, "Pizza", 1500, "Main Dish"};
+        menu[4] = (MenuItem){301, "Ice Cream", 280, "Desserts"};
+
+        menuCount = 5;
+        saveMenuToFile();
+        return;
+    }
+    menuCount = 0;
+    char line[100];
+    while (fgets(line, sizeof(line), file) != NULL && menuCount < MAX_ITEMS) {
+        char *token;
+        char *rest = line;
+        token = strtok(rest, ",");
+        if (token == NULL) continue;
+        menu[menuCount].id = atoi(token);
+        token = strtok(NULL, ",");
+        if (token == NULL) continue;
+        strncpy(menu[menuCount].name, token, sizeof(menu[menuCount].name) - 1);
+        menu[menuCount].name[sizeof(menu[menuCount].name) - 1] = '\0';
+        token = strtok(NULL, ",");
+        if (token == NULL) continue;
+        menu[menuCount].price = atof(token);
+        token = strtok(NULL, "\n");
+        if (token == NULL) continue;
+        strncpy(menu[menuCount].category, token, sizeof(menu[menuCount].category) - 1);
+        menu[menuCount].category[sizeof(menu[menuCount].category) - 1] = '\0';
+        menuCount++;
+    }
+    fclose(file);
+    printf("Menu loaded from %s successfully.\n", MENU_FILENAME);
+    delay(1000);
+}
