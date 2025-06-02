@@ -1,0 +1,39 @@
+int main() {
+    loadMenuFromFile();
+    printBanner();
+    int choice;
+    while(1) {
+        printf("\n === WELCOME LAVA RESTAURANT ===\n");
+        delay(700);
+        printf("1. Customer Menu (Place Order & Generate Bill)\n");
+        delay(300);
+        printf("2. Admin Panel\n");
+        delay(300);
+        printf("3. Exit\n");
+        delay(300);
+        printf("Choice: ");
+        scanf("%d", &choice);
+        getchar();
+        switch(choice) {
+            case 1:
+                placeOrder();
+                generateBill(1);
+                orderCount = 0;
+                break;
+            case 2:
+                if (checkAdminPassword()) {
+                    adminPanel();
+                }
+                break;
+            case 3:
+                saveMenuToFile();
+                printf("      Thank You,Have A Nice Day!\n      |LAVA RESTAURANT|\n");
+                delay(1500);
+                exit(0);
+            default:
+                printf("Invalid choice! Please try again.\n");
+                delay(1000);
+        }
+    }
+    return 0;
+}
