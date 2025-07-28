@@ -1,0 +1,49 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <ctype.h>
+
+#ifdef _WIN32
+#include <conio.h>
+#include <windows.h>
+#else
+#include <termios.h>
+#include <unistd.h>
+#endif
+
+#define MAX_ITEMS 50
+#define TAX_RATE 0.05
+#define MENU_FILENAME "menu.txt"
+#define ADMIN_PASSWORD "admin123"
+
+typedef struct {
+    int id;
+    char name[50];
+    float price;
+    char category[20];
+} MenuItem;
+
+typedef struct {
+    MenuItem *item;
+    int quantity;
+} OrderItem;
+
+MenuItem menu[MAX_ITEMS];
+int menuCount = 0;
+OrderItem orders[MAX_ITEMS];
+int orderCount = 0;
+
+// --- ASCII Art Banner Function ---
+void printBanner() {
+#ifdef _WIN32
+    system("color 9");
+#else
+    printf("\033[1;94m");
+#endif
+    printf("LL          A  V       V  A        RRRRR    EEEEE   SSSSS TTTTT    A    U     U  RRRRR        A      N    N  TTTTT\n");
+    printf("LL         AAA  V     V  AAA       RR  RR   EE     SS       T     AAA   U     U  RR  RR      AAA     NN   N    T\n");
+    printf("LL        AA AA  V   V  AA AA      RRRRR    EEEE     SSS    T    AA AA  U     U  RRRRR      AA AA    N N  N    T\n");
+    printf("LL       AAAAAAA  V V  AAAAAAA     RR  RR   EE         SS   T   AAAAAAA U     U  RR  RR    AAAAAAA   N  N N    T\n");
+    printf("LLLLLL  AA     AA  V  AA     AA    RR   RR  EEEEE  SSSSS    T  AA     AA  UUU    RR   RR  AA     AA  N    N    T\n");
+    printf("\033[0m");
+}
